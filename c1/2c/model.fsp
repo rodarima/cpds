@@ -1,0 +1,10 @@
+
+/* The problem with the diagram is that server can respond after a client timeout */
+
+CLIENT = (call -> WAIT),
+WAIT = (answer -> continue -> CLIENT | timeout -> CLIENT).
+
+SERVER = (request-> LISTEN),
+LISTEN = (timeout -> SERVER | service -> reply -> SERVER).
+
+||CLIENT_SERVER = (CLIENT||SERVER) /{call/request, answer/reply}.

@@ -1,0 +1,9 @@
+
+/* Time-Out Client server */
+
+CLIENT = (call -> WAIT),
+WAIT = (answer -> continue -> CLIENT | timeout -> CLIENT).
+
+SERVER = (request-> service -> reply -> SERVER).
+
+||CLIENT_SERVER = (CLIENT||SERVER) /{call/request, answer/reply}.
