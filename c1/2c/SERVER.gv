@@ -1,0 +1,10 @@
+digraph G {
+rankdir = LR;
+0 [shape=circle,style=filled, fillcolor=pink];
+1 [shape=circle,style=filled, fillcolor=pink];
+2 [shape=circle,style=filled, fillcolor=pink];
+0 -> 1 [label = "request"];
+1 -> 0 [label = "timeout"];
+1 -> 2 [label = "service"];
+2 -> 0 [label = "reply"];
+}

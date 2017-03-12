@@ -1,0 +1,5 @@
+digraph G {
+rankdir = LR;
+0 [shape=circle,style=filled, fillcolor=pink];
+0 -> 0 [label = "leave"];
+}

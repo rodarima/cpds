@@ -1,0 +1,7 @@
+digraph G {
+rankdir = LR;
+0 [shape=circle,style=filled, fillcolor=pink];
+1 [shape=circle,style=filled, fillcolor=pink];
+0 -> 1 [label = "open"];
+1 -> 0 [label = "close"];
+}

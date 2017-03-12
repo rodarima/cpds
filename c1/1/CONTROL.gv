@@ -1,0 +1,37 @@
+digraph G {
+rankdir = LR;
+0 [shape=circle,style=filled, fillcolor=pink];
+1 [shape=circle,style=filled, fillcolor=pink];
+2 [shape=circle,style=filled, fillcolor=pink];
+3 [shape=circle,style=filled, fillcolor=pink];
+4 [shape=circle,style=filled, fillcolor=pink];
+5 [shape=circle,style=filled, fillcolor=pink];
+6 [shape=circle,style=filled, fillcolor=pink];
+7 [shape=circle,style=filled, fillcolor=pink];
+8 [shape=circle,style=filled, fillcolor=pink];
+9 [shape=circle,style=filled, fillcolor=pink];
+10 [shape=circle,style=filled, fillcolor=pink];
+11 [shape=circle,style=filled, fillcolor=pink];
+0 -> 1 [label = "open"];
+1 -> 0 [label = "close"];
+1 -> 2 [label = "arrive"];
+2 -> 1 [label = "leave"];
+2 -> 3 [label = "close"];
+2 -> 4 [label = "arrive"];
+3 -> 0 [label = "leave"];
+4 -> 2 [label = "leave"];
+4 -> 5 [label = "close"];
+4 -> 6 [label = "arrive"];
+5 -> 3 [label = "leave"];
+6 -> 4 [label = "leave"];
+6 -> 7 [label = "close"];
+6 -> 8 [label = "arrive"];
+7 -> 5 [label = "leave"];
+8 -> 6 [label = "leave"];
+8 -> 9 [label = "close"];
+8 -> 10 [label = "arrive"];
+9 -> 7 [label = "leave"];
+10 -> 8 [label = "leave"];
+10 -> 11 [label = "close"];
+11 -> 9 [label = "leave"];
+}
