@@ -54,15 +54,15 @@ Solve the following questions:
 a) Define the `CLIENT_SERVER` process by composing `CLIENT` and `SERVER` synchronizing
 actions `call/request` and `answer/reply`.
 
-	`||CLIENT_SERVER = (CLIENT || SERVER) /{.../..., .../...}.`
+	||CLIENT_SERVER = (CLIENT || SERVER) /{.../..., .../...}.
 
 In order to execute the parallel composition || in ltsa you need to press the ||
 button next to the C button.
 
 The model is defined [here](2/model.fsp).
 
-b) Draw the LTS for CLIENT_SERVER. Do you observe in the diagram something strange
-pointing out a possible bad behavior in the CLIENT SERVER system?
+b) Draw the `LTS` for `CLIENT_SERVER`. Do you observe in the diagram something strange
+pointing out a possible bad behavior in the `CLIENT_SERVER` system?
 
 The resulting graph:
 
@@ -71,7 +71,7 @@ The resulting graph:
 There is a node without exiting edges, so there is a deadlock. In the graph is
 marked with a red color.
 
-c) Provide a new SERVER definition to overcome previous drawbacks.
+c) Provide a new `SERVER` definition to overcome previous drawbacks.
 
 The new definition can be found [here](2c/model.fsp). Now the graph shows no
 deadlocks.
