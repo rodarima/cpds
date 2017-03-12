@@ -1,6 +1,6 @@
 ## Lab 1 Labelled Transition System Analyzer & Finite State Processes
 
-Rodrigo Arias Mallo <rodrigo.arias@est.fib.upc.edu>
+Rodrigo Arias Mallo - <rodrigo.arias@est.fib.upc.edu>
 
 ### Exercise 1
 
