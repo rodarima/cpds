@@ -69,11 +69,15 @@ The resulting graph:
 ![CLIENT_SERVER](2/CLIENT_SERVER.png)
 
 There is a node without exiting edges, so there is a deadlock. In the graph is
-marked with a red color.
+marked with a red color. To find out the trace which produced the deadlock, the
+file [deadlock.txt](2/deadlock.txt) contains the shortest path:
+
+	Deadlock found for process CLIENT_SERVER: state 4
+		Trace to Deadlock: call->timeout->service->
 
 c) Provide a new `SERVER` definition to overcome previous drawbacks.
 
 The new definition can be found [here](2c/model.fsp). Now the graph shows no
-deadlocks.
+deadlocks and the file [deadlock.txt](2c/deadlock.txt) is now empty.
 
 ![CLIENT_SERVER](2c/CLIENT_SERVER.png)
