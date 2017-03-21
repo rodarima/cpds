@@ -8,7 +8,7 @@ call such a program BanketNoWait. Compare the approaches between Banket and
 BanketNoWait, which one is better (if any)?
 
 Yes, it is possible by using `syncronized` methods `getservings` and `fillpot`.  
-The complete solution code is in the [hw1](hw1/) directory.
+The complete solution code is in the [1](1/) directory.
 
 The solution `Banket` is better, because once a proccess enters the 
 `getservings` zone and no servings are available, the proccess is set to the 
@@ -43,7 +43,7 @@ saving account system.  First, fill in the snipped code to obtain the FSP model
 	||SAVING_ACCOUNT = (a:PERSON || ... || {.. , ...}::ACCOUNT).
 	```
 
-The completed model can be found under hw2/fsp [here](hw2/fsp/model.fsp)
+The completed model can be found in [2/fsp](2/fsp/model.fsp).
 
 Now develop the Java program for the Saving Account problem. In order to avoid
 the execution get stuck when the balance is not enough to satisfy withdraw
@@ -51,5 +51,7 @@ orders of Alice and Bob you can assume that a third participant (perhaps a
 company) shares the account and only engages in the deposit action.  Java codes
 that stick to recommendations on Magge and Kramer book in Chapter 5 will get a
 higher score.
+
+The java code can be found in [2/java](2/java).
 
 
