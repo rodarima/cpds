@@ -43,10 +43,13 @@ saving account system.  First, fill in the snipped code to obtain the FSP model
 	||SAVING_ACCOUNT = (a:PERSON || ... || {.. , ...}::ACCOUNT).
 	```
 
+The completed model can be found under hw2/fsp [here](hw2/fsp/model.fsp)
+
 Now develop the Java program for the Saving Account problem. In order to avoid
 the execution get stuck when the balance is not enough to satisfy withdraw
 orders of Alice and Bob you can assume that a third participant (perhaps a
 company) shares the account and only engages in the deposit action.  Java codes
 that stick to recommendations on Magge and Kramer book in Chapter 5 will get a
 higher score.
+
 
