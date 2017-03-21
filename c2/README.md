@@ -415,7 +415,7 @@ Implement all the remaining classes and run the application
 
 ### 2.2.1 Exercises
 
-1\. BanketNoWait. It is possible to "repair" easily the BadPotTwo keeping the
+1. BanketNoWait. It is possible to "repair" easily the BadPotTwo keeping the
 same approach. That is "just try but not wait", later you will try again. We
 call such a program BanketNoWait. Compare the approaches between Banket and
 BanketNoWait, which one is better (if any)?
