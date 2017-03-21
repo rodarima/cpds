@@ -420,6 +420,20 @@ same approach. That is "just try but not wait", later you will try again. We
 call such a program BanketNoWait. Compare the approaches between Banket and
 BanketNoWait, which one is better (if any)?
 
+Yes, it is possible by using `syncronized` methods `getservings` and `fillpot`.  
+The complete solution code is in the [hw1](hw1/) directory.
+
+The solution `Banket` is better, because once a proccess enters the 
+`getservings` zone and no servings are available, the proccess is set to the 
+waiting state. In such state, the CPU is free to attend other proccesses. Once 
+the cook fills the pot, the proccess in notified, and restarts the execution.  
+Also no other proccess is allowed to access the `getservings` method, while one 
+proccess is waiting.
+
+However, in the `BanketNoWait` solution, once a proccess tries to get servings 
+from an empty pot, returns to check again later. This continuous polling, is not 
+necesary in the `Banket`, so leaving the CPU free.
+
 2\. (M&K 5.6) The Saving Account Problem: A saving account is shared by Alice
 and Bob.  Each one may deposit or withdraw funds from the account subject to the
 constraint that the balance of the account must never become negative. Develop a
