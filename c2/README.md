@@ -28,7 +28,7 @@ model for the problem and from the model derive a Java implementation for the
 saving account system.  First, fill in the snipped code to obtain the FSP model
 
 
-
+	```
 	Const N = 10 //actually, it has to be a big number...
 
 	PERSON = (deposit[0..N] -> PERSON
@@ -41,8 +41,7 @@ saving account system.  First, fill in the snipped code to obtain the FSP model
 	).
 	
 	||SAVING_ACCOUNT = (a:PERSON || ... || {.. , ...}::ACCOUNT).
-
-
+	```
 
 Now develop the Java program for the Saving Account problem. In order to avoid
 the execution get stuck when the balance is not enough to satisfy withdraw
