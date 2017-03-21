@@ -12,7 +12,7 @@ call such a program BanketNoWait. Compare the approaches between Banket and
 BanketNoWait, which one is better (if any)?
 
 Yes, it is possible by using `syncronized` methods `getservings` and `fillpot`.  
-The complete solution code is in the [1](1/) directory.
+The complete solution code is in the [1/](1/) directory.
 
 The solution `Banket` is better, because once a proccess enters the 
 `getservings` zone and no servings are available, the proccess is set to the 
