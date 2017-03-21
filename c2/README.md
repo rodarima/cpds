@@ -1,3 +1,7 @@
+# Lab 2: FSP Models & Java Programs
+
+Rodrigo Arias Mallo - <rodrigo.arias@est.fib.upc.edu>
+
 ## 2.2 Homework
 
 ### 2.2.1 Exercises
