@@ -87,3 +87,81 @@ check progress violations to enter.
 
 	||GREEDY = FIELD << {flag1.setTrue, flag2.setTrue}.
 
+2.  Field Program We ask to develop a Field Java program corresponding to the 
+    Warring Neighbors exercise. As usual neighbors are alice denoted as a and 
+    bob denoted as b.
+
+Complete the following snipped code:
+
+	public class Field {
+		public static void main(String args[]) {
+			Flags flags = new Flags();
+
+			Thread a = new Neighbor(flags);
+			Thread b = new Neighbor(flags);
+
+			a.setName("alice");
+			b.setName("bob");
+
+			a.start();
+			b.start();
+		}
+	}
+
+Following a snipped for Flag
+
+	public class Flags {
+		private boolean flag_alice;
+		private boolean flag_bob;
+		public Flags() {
+			flag_alice = false;
+			flag_bob = false;
+		}
+		public synchronized boolean query_flag(String s) {
+			//no condition synchronization is needed
+			if (s.equals("alice")) return flag_bob;
+			return flag_bob ;
+		}
+		public synchronized void set_true(String s) {
+			//no condition synchronization is needed
+			if (s.equals("alice")) { flag_alice = true;}
+			else { flag_bob = true; }
+		}
+		public synchronized void set_false(String s) {
+			//no condition synchronization is needed
+			if (s.equals("alice")) { flag_alice = false; }
+			else { flag_bob = false; }
+		}
+	}
+
+Finally the neighbor (with no stress).
+
+	public class Neighbor extends Thread {
+		private Flags flags;
+		public Neighbor(Flags flags) {
+			this.flags = flags;
+		}
+		public void run() {
+			while (true) {
+				try {
+					String name = Thread.currentThread().getName();
+					System.out.println("try again, my name is: "+ name);
+					flags.set_true(name);
+					//To model greedy write the sleep as follows
+					Thread.sleep((int)(200 * Math.random()));
+					if ( flags.query_flag(name) == false ) {
+						System.out.println(name + " enter");
+						Thread.sleep(400);
+						System.out.println(name + " exits");
+					}
+					Thread.sleep((int)(200 * Math.random()));
+					flags.set_false(name);
+				}
+				catch (InterruptedException e) {};
+			}
+		}
+	}
+
+A possible printout could be
+
+
