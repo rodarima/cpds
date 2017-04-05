@@ -44,6 +44,6 @@ progress ENTER1={n1.enter} //neigh 1 always gets to enter
 progress ENTER2={n2.enter} //neigh 2 always gets to enter
 
 
-||FIELD=(n1:NEIGHBOR1 || n2:NEIGHBOR2 || FLAGS || MUTEX ).
+||FIELD=(n1:NEIGHBOR1 || n2:NEIGHBOR2 || {n1,n2}::FLAGS || MUTEX ).
 
 ||GREEDY = FIELD << {flag1.setTrue, flag2.setTrue}.

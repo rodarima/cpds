@@ -71,14 +71,14 @@ analyser.
 		|flag1[True] ->flag2.setFalse->MUTEX_2
 	).
 
-	||FIELD = (n1:NEIGHBOR1 || n2:NEIGHBOR2 || FLAGS || MUTEX).
+	||FIELD = (n1:NEIGHBOR1 || n2:NEIGHBOR2 || {n1,n2}::FLAGS || MUTEX).
 
 The analyzer shows no progress violations:
 
 	Progress Check...
-	-- States: 144 Transitions: 1200 Memory used: 23563K
+	-- States: 27 Transitions: 54 Memory used: 4513K
 	No progress violations detected.
-	Progress Check in: 7ms
+	Progress Check in: 4ms
 
 Specify progress properties for the neighbors in order to check that, under fair 
 scheduling policies, they eventually enter to the field to pick berries.
