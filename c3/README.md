@@ -21,38 +21,36 @@ The following schema can be used to model the flags. Please complete the snipped
 code.
 
 	const False = 0
-	const True = 1
-	range Bool = False..True
-
-	set BoolActions={setTrue, setFalse,[False],[True]}
+	const True  = 1
+	range Bool  = False..True
+	set BoolActions = {setTrue, setFalse, [False], [True]}
 
 	BOOLVAR=VAL[False],
-	VAL[v:Bool]=(setTrue-> VAL[True]
-					|setFalse->VAL[False]
-					|[v]-> VAL[v]
+	VAL[v:Bool] = (
+		setTrue-> VAL[True]
+		| setFalse->VAL[False]
+		| [v]-> VAL[v]
 	).
 
 	||FLAGS =(flag1:BOOLVAR || flag2:BOOLVAR).
 
 
-	NEIGHBOR1=(flag1.setTrue -> TEST),
-	TEST=(flag2[raised:Bool]->
-				if(raised) then
-					(flag1.setFalse-> NEIGHBOR1)
-				else
-					(enter->exit->flag1.setFalse->NEIGHBOR1)
+	NEIGHBOR1 = (flag1.setTrue -> TEST),
+	TEST = (flag2[raised:Bool]->
+		if(raised) then
+			(flag1.setFalse-> NEIGHBOR1)
+		else
+			(enter->exit->flag1.setFalse->NEIGHBOR1)
 	)+ {{flag1,flag2}.BoolActions}.
 
 
 	NEIGHBOR2=(flag2.setTrue -> TEST),
 	TEST=(flag1[raised:Bool]->
-				if(raised) then
-					(flag2.setFalse -> NEIGHBOR2)
-				else
-					(enter->exit->flag2.setFalse->NEIGHBOR2)
+		if(raised) then
+			(flag2.setFalse -> NEIGHBOR2)
+		else
+			(enter->exit->flag2.setFalse->NEIGHBOR2)
 	)+ {{flag1,flag2}.BoolActions}.
-
-
 
 
 Specify the required safety property MUTEX for the field and check that it does indeed
@@ -62,24 +60,36 @@ analyser.
 
 	property ||MUTEX = (n1:MUTEX_1||n2:MUTEX_2).
 	MUTEX_1 = (flag1.setTrue -> SAFE),
-	SAFE= ( flag2[False] -> flag1.setFalse -> MUTEX_1
-		  | flag2[True] -> flag1.setFalse -> MUTEX_1).
+	SAFE = (
+		flag2[False] -> flag1.setFalse -> MUTEX_1
+		| flag2[True] -> flag1.setFalse -> MUTEX_1
+	).
 
 	MUTEX_2 = (flag2.setTrue -> SAFE),
-	SAFE= (flag1[False] -> flag2.setFalse -> MUTEX_2
-		  |flag1[True] ->flag2.setFalse->MUTEX_2).
+	SAFE = (
+		flag1[False] -> flag2.setFalse -> MUTEX_2
+		|flag1[True] ->flag2.setFalse->MUTEX_2
+	).
 
-	||FIELD=(n1:NEIGHBOR1 || n2:NEIGHBOR2 || FLAGS || MUTEX ).
+	||FIELD = (n1:NEIGHBOR1 || n2:NEIGHBOR2 || FLAGS || MUTEX).
+
+The analyzer shows no progress violations:
+
+	Progress Check...
+	-- States: 144 Transitions: 1200 Memory used: 23563K
+	No progress violations detected.
+	Progress Check in: 7ms
 
 Specify progress properties for the neighbors in order to check that, under fair 
 scheduling policies, they eventually enter to the field to pick berries.
 
-
-	progress ENTER1={n1.enter} //neigh 1 always gets to enter
-	progress ENTER2={n2.enter} //neigh 2 always gets to enter
-
+	progress ENTER1 = {n1.enter} //neigh 1 always gets to enter
+	progress ENTER2 = {n2.enter} //neigh 2 always gets to enter
 
 Are there any adverse circumstances in which neighbors would not make progress?
+
+Yes, if both raise the flag at the same time.
+
 What if the neighbors are greedy?
 Hint: Greedy neighbors - make setting the flags high priority - eagerness to enter.
 Provide the FSP description of the greedy neighbors and use the analyser to 
@@ -87,12 +97,31 @@ check progress violations to enter.
 
 	||GREEDY = FIELD << {flag1.setTrue, flag2.setTrue}.
 
+Now the analyzer detects a progress violation.
+
+	Progress Check...
+	-- States: 3 Transitions: 6 Memory used: 13657K
+	Finding trace to cycle...
+	Finding trace in cycle...
+	Progress violation: ENTER2 ENTER1
+	Trace to terminal set of states:
+		flag1.setTrue
+		flag2.setTrue
+	Cycle in terminal set:
+		flag1.setTrue
+	Actions in terminal set:
+		{flag1, flag2}.setTrue
+	Progress Check in: 1ms
+
+The full model can be found in [1/model.fsp](1/model.fsp).
+
 2.  Field Program We ask to develop a Field Java program corresponding to the 
     Warring Neighbors exercise. As usual neighbors are alice denoted as a and 
     bob denoted as b.
 
 Complete the following snipped code:
 
+	$ cat 2/Field.java
 	public class Field {
 		public static void main(String args[]) {
 			Flags flags = new Flags();
@@ -110,6 +139,7 @@ Complete the following snipped code:
 
 Following a snipped for Flag
 
+	$ cat 2/Flags.java
 	public class Flags {
 		private boolean flag_alice;
 		private boolean flag_bob;
@@ -136,9 +166,62 @@ Following a snipped for Flag
 
 Finally the neighbor (with no stress).
 
+	$ cat 2/Neighbor.java
 	public class Neighbor extends Thread {
 		private Flags flags;
 		public Neighbor(Flags flags) {
+			this.flags = flags;
+		}
+		public void run() {
+			while (true) {
+				try {
+					String name = Thread.currentThread().getName();
+					System.out.println("try again, my name is: "+ name);
+					Thread.sleep((int)(200 * Math.random()));
+					flags.set_true(name);
+					if ( flags.query_flag(name) == false ) {
+						System.out.println(name + " enter");
+						Thread.sleep(400);
+						System.out.println(name + " exits");
+					}
+					Thread.sleep((int)(200 * Math.random()));
+					flags.set_false(name);
+				}
+				catch (InterruptedException e) {};
+			}
+		}
+	}
+
+A possible printout could be
+
+	$ java Field | head -20
+	try again, my name is: alice
+	try again, my name is: bob
+	alice enter
+	try again, my name is: bob
+	try again, my name is: bob
+	try again, my name is: bob
+	alice exits
+	try again, my name is: alice
+	try again, my name is: bob
+	alice enter
+	try again, my name is: bob
+	try again, my name is: bob
+	alice exits
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: bob
+	alice enter
+	try again, my name is: bob
+
+In order to model stress (or greedy), just change the sleep
+
+	$ cat 2/NeighborGreedy.java
+	public class NeighborGreedy extends Thread {
+		private Flags flags;
+		public NeighborGreedy(Flags flags) {
 			this.flags = flags;
 		}
 		public void run() {
@@ -162,6 +245,28 @@ Finally the neighbor (with no stress).
 		}
 	}
 
-A possible printout could be
+and in this case the printout should be:
 
+	$ java FieldGreedy | head -20
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: bob
+	try again, my name is: alice
+	try again, my name is: alice
+	try again, my name is: bob
 
+All the java source code can be found in the [2/](2/) folder.

@@ -1,6 +1,6 @@
-public class Neighbor extends Thread {
+public class NeighborGreedy extends Thread {
 	private Flags flags;
-	public Neighbor(Flags flags) {
+	public NeighborGreedy(Flags flags) {
 		this.flags = flags;
 	}
 	public void run() {
@@ -8,8 +8,9 @@ public class Neighbor extends Thread {
 			try {
 				String name = Thread.currentThread().getName();
 				System.out.println("try again, my name is: "+ name);
-				Thread.sleep((int)(200 * Math.random()));
 				flags.set_true(name);
+				//To model greedy write the sleep as follows
+				Thread.sleep((int)(200 * Math.random()));
 				if ( flags.query_flag(name) == false ) {
 					System.out.println(name + " enter");
 					Thread.sleep(400);
