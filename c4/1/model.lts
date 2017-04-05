@@ -17,19 +17,21 @@ TVAL[i:Card] = ( set1 -> TVAL[1]| set2 -> TVAL[2] | [i] -> TVAL[i] ).
 ||FLAGS =(flag1:BOOLVAR || flag2:BOOLVAR).
 
 
-NEIGHBOR1=(flag1.setTrue -> turn.set1 -> TEST),
+NEIGHBOR1=(flag1.setTrue -> turn.set2 -> TEST),
 TEST=(flag2[raised:Bool] -> turn[i:Card] ->
 			if(raised && i == 2) then
 				(flag1.setFalse-> NEIGHBOR1)
+//				(turn[1] -> TEST | turn[2] -> TEST)
 			else
 				(enter->exit->flag1.setFalse->NEIGHBOR1)
 )+ {{flag1,flag2}.BoolActions, turn.TurnActions }.
 
 
-NEIGHBOR2=(flag2.setTrue -> turn.set2 -> TEST),
+NEIGHBOR2=(flag2.setTrue -> turn.set1 -> TEST),
 TEST=(flag1[raised:Bool]-> turn[i:Card] ->
 			if(raised && i == 1) then
 				(flag2.setFalse -> NEIGHBOR2)
+//				(turn[1] -> TEST | turn[2] -> TEST)
 			else
 				(enter->exit->flag2.setFalse->NEIGHBOR2)
 )+ {{flag1,flag2}.BoolActions, turn.TurnActions }.
