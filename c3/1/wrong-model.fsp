@@ -16,8 +16,8 @@ NEIGHBOR1 = (flag1.setTrue -> TEST),
 		if(raised) then
 			(flag1.setFalse -> NEIGHBOR1)
 		else
-			(enter1 -> exit1 -> flag1.setFalse -> NEIGHBOR1)
-).
+			(enter -> exit -> flag1.setFalse -> NEIGHBOR1)
+)+ {{flag1,flag2}.BoolActions}.
 
 
 NEIGHBOR2=(flag2.setTrue -> TEST),
@@ -25,16 +25,18 @@ NEIGHBOR2=(flag2.setTrue -> TEST),
 		if(raised) then
 			(flag2.setFalse -> NEIGHBOR2)
 		else
-			(enter2->exit2->flag2.setFalse->NEIGHBOR2)
+			(enter->exit->flag2.setFalse->NEIGHBOR2)
+)+ {{flag1,flag2}.BoolActions}.
+
+// The same neighbor should exit after entering
+property MUTEX = (
+	n1.enter -> n1.exit -> MUTEX |
+	n2.enter -> n2.exit -> MUTEX
 ).
 
+progress ENTER1={n1.enter} //neigh 1 always gets to enter
+progress ENTER2={n2.enter} //neigh 2 always gets to enter
 
-property MUTEX = (enter1 -> exit1 -> MUTEX | enter2 -> exit2 -> MUTEX).
-
-progress ENTER1={enter1} //neigh 1 always gets to enter
-progress ENTER2={enter2} //neigh 2 always gets to enter
-
-
-||FIELD=(NEIGHBOR1 || NEIGHBOR2 || FLAGS || MUTEX ).
+||FIELD=(n1:NEIGHBOR1 || n2:NEIGHBOR2 || {n1,n2}::FLAGS || MUTEX ).
 
 ||GREEDY = FIELD << {flag1.setTrue, flag2.setTrue}.

@@ -20,37 +20,34 @@ Rodrigo Arias Mallo - <rodrigo.arias@est.fib.upc.edu>
 The following schema can be used to model the flags. Please complete the snipped
 code.
 
-	const False = 0
-	const True  = 1
-	range Bool  = False..True
+	const False =0
+	const True=1
+	range Bool = False..True
 	set BoolActions = {setTrue, setFalse, [False], [True]}
 
-	BOOLVAR=VAL[False],
-	VAL[v:Bool] = (
-		setTrue-> VAL[True]
-		| setFalse->VAL[False]
-		| [v]-> VAL[v]
+	BOOLVAR = VAL[False], VAL[v:Bool] = (
+		setTrue	-> VAL[True] |
+		setFalse-> VAL[False] |
+		[v] -> VAL[v]
 	).
 
 	||FLAGS =(flag1:BOOLVAR || flag2:BOOLVAR).
 
-
 	NEIGHBOR1 = (flag1.setTrue -> TEST),
-	TEST = (flag2[raised:Bool]->
-		if(raised) then
-			(flag1.setFalse-> NEIGHBOR1)
-		else
-			(enter->exit->flag1.setFalse->NEIGHBOR1)
-	)+ {{flag1,flag2}.BoolActions}.
-
+		TEST = (flag2[raised:Bool]  ->
+			if(raised) then
+				(flag1.setFalse -> NEIGHBOR1)
+			else
+				(enter1 -> exit1 -> flag1.setFalse -> NEIGHBOR1)
+	).
 
 	NEIGHBOR2=(flag2.setTrue -> TEST),
-	TEST=(flag1[raised:Bool]->
-		if(raised) then
-			(flag2.setFalse -> NEIGHBOR2)
-		else
-			(enter->exit->flag2.setFalse->NEIGHBOR2)
-	)+ {{flag1,flag2}.BoolActions}.
+		TEST=(flag1[raised:Bool] ->
+			if(raised) then
+				(flag2.setFalse -> NEIGHBOR2)
+			else
+				(enter2->exit2->flag2.setFalse->NEIGHBOR2)
+	).
 
 
 Specify the required safety property MUTEX for the field and check that it does indeed
@@ -58,37 +55,28 @@ ensure mutually exclusive access. In order to do the check, define a FIELD proce
 composing processes FLAGS, NEIGHBORs and MUTEX and do the test with the 
 analyser.
 
-	property ||MUTEX = (n1:MUTEX_1||n2:MUTEX_2).
-	MUTEX_1 = (flag1.setTrue -> SAFE),
-	SAFE = (
-		flag2[False] -> flag1.setFalse -> MUTEX_1
-		| flag2[True] -> flag1.setFalse -> MUTEX_1
-	).
 
-	MUTEX_2 = (flag2.setTrue -> SAFE),
-	SAFE = (
-		flag1[False] -> flag2.setFalse -> MUTEX_2
-		|flag1[True] ->flag2.setFalse->MUTEX_2
-	).
+	property MUTEX = (enter1 -> exit1 -> MUTEX | enter2 -> exit2 -> MUTEX).
 
-	||FIELD = (n1:NEIGHBOR1 || n2:NEIGHBOR2 || {n1,n2}::FLAGS || MUTEX).
+	||FIELD=(NEIGHBOR1 || NEIGHBOR2 || FLAGS || MUTEX ).
+
 
 The analyzer shows no progress violations:
 
 	Progress Check...
-	-- States: 27 Transitions: 54 Memory used: 4513K
+	-- States: 27 Transitions: 54 Memory used: 6152K
 	No progress violations detected.
-	Progress Check in: 4ms
+	Progress Check in: 7ms
 
 Specify progress properties for the neighbors in order to check that, under fair 
 scheduling policies, they eventually enter to the field to pick berries.
 
-	progress ENTER1 = {n1.enter} //neigh 1 always gets to enter
-	progress ENTER2 = {n2.enter} //neigh 2 always gets to enter
+	progress ENTER1={enter1} //neigh 1 always gets to enter
+	progress ENTER2={enter2} //neigh 2 always gets to enter
 
 Are there any adverse circumstances in which neighbors would not make progress?
 
-Yes, if both raise the flag at the same time.
+Yes, if both raise the flag at the same time and none gets in.
 
 What if the neighbors are greedy?
 Hint: Greedy neighbors - make setting the flags high priority - eagerness to enter.
@@ -100,20 +88,26 @@ check progress violations to enter.
 Now the analyzer detects a progress violation.
 
 	Progress Check...
-	-- States: 3 Transitions: 6 Memory used: 13657K
+	-- States: 9 Transitions: 14 Memory used: 4319K
 	Finding trace to cycle...
 	Finding trace in cycle...
 	Progress violation: ENTER2 ENTER1
 	Trace to terminal set of states:
-		flag1.setTrue
 		flag2.setTrue
 	Cycle in terminal set:
 		flag1.setTrue
+		flag2.1
+		flag1.setFalse
 	Actions in terminal set:
-		{flag1, flag2}.setTrue
-	Progress Check in: 1ms
+		{flag1, flag2}.{[1], {setFalse, setTrue}}
+	Progress Check in: 7ms
 
 The full model can be found in [1/model.fsp](1/model.fsp).
+
+Note: There is a model following the snippets of code in the statement in 
+[1/wrong-model.fsp](1/wrong-model.fsp) but doesn't work. The progress properties 
+are never violated. I don't understand why occurs nor I don't understand the 
+prefix n1. and n2. scope.
 
 2.  Field Program We ask to develop a Field Java program corresponding to the 
     Warring Neighbors exercise. As usual neighbors are alice denoted as a and 
