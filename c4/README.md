@@ -49,9 +49,9 @@ The model can be found in [1/model.fsp](1/model.fsp). The analyzer shows no dead
 No progress violations:
 
 	Progress Check...
-	-- States: 864 Transitions: 7200 Memory used: 24105K
+	-- States: 100 Transitions: 168 Memory used: 4532K
 	No progress violations detected.
-	Progress Check in: 11ms
+	Progress Check in: 6ms
 
 Even the GREEDY process shows no deadlocks:
 
@@ -60,7 +60,50 @@ Even the GREEDY process shows no deadlocks:
 And now, no progress violations:
 
 	Progress Check...
-	-- States: 171 Transitions: 378 Memory used: 12379K
+	-- States: 61 Transitions: 90 Memory used: 4389K
 	No progress violations detected.
-	Progress Check in: 6ms
+	Progress Check in: 5ms
+
+Note: Again, the model completed from the snippets seems to be not working. It 
+can be found in [1/wrong-model.fsp](1/wrong-model.fsp). The number of states and 
+transitions of both models are different, even after minimization:
+
+	model.fsp
+	FIELD  Minimised States: 49
+	GREEDY Minimised States: 49
+
+	wrong-model.fsp
+	FIELD  Minimised States: 63
+	GREEDY Minimised States: 63
+
+2. Implement in Java the warring neighbors system using the Peterson's protocol.  
+   Check that this program version avoid the progress problems present in the 
+   previous week code version when neighbors are greedy (code corresponding to 
+   exercise 7.6 of M&K).
+
+The java code can be found in the [2/](2/) directory. Now the output shows the 
+proccesses accessing the field.
+
+	$ java Field | head -20
+	try again, my name is: alice
+	try again, my name is: bob
+	bob enters
+	alice enters
+	bob exits
+	try again, my name is: bob
+	alice exits
+	bob enters
+	try again, my name is: alice
+	alice enters
+	bob exits
+	try again, my name is: bob
+	alice exits
+	bob enters
+	try again, my name is: alice
+	alice enters
+	bob exits
+	alice exits
+	try again, my name is: bob
+	try again, my name is: alice
+
 
