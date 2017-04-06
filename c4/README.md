@@ -82,7 +82,7 @@ transitions of both models are different, even after minimization:
    exercise 7.6 of M&K).
 
 The java code can be found in the [2/](2/) directory. Now the output shows the 
-proccesses accessing the field.
+processes accessing the field.
 
 	$ java Field | head -20
 	try again, my name is: alice
