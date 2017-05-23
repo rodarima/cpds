@@ -33,7 +33,7 @@ round(Name, Backoff, Round, Proposal, Acceptors, PanelId) ->
     end.
 
 ballot(Name, Round, Proposal, Acceptors, PanelId) ->
-    prepare(Name, Acceptors),
+    prepare(Round, Acceptors),
     Quorum = (length(Acceptors) div 2) + 1,
     MaxVoted = order:null(),
     case collect(Quorum, Round, MaxVoted, Proposal) of
@@ -60,7 +60,7 @@ collect(0, _, _, Proposal) ->
 collect(N, Round, MaxVoted, Proposal) ->
     receive 
         {promise, Round, _, na} ->
-            collect(N, Round, MaxVoted, Proposal);
+            collect(N-1, Round, MaxVoted, Proposal);
         {promise, Round, Voted, Value} ->
             case order:gr(Voted, MaxVoted) of
                 true ->
