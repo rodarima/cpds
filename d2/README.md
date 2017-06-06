@@ -4,5 +4,5 @@ Rodrigo Arias Mallo
 
 ## Structure
 
-The report is located at [data/report.pdf](data/report.pdf). All the experiments
+The report is located at [doc/report.pdf](doc/report.pdf). All the experiments
 are in each directory exp1, exp2, etc.

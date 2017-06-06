@@ -11,31 +11,33 @@ validator() ->
     receive
         {validate, Ref, Reads, Writes, Client} ->
             Tag = make_ref(),
-            send_read_checks(..., Tag),  %% TODO: COMPLETE
-            case check_reads(..., Tag) of  %% TODO: COMPLETE
+            send_read_checks(Reads, Tag),  %% TODO: COMPLETE
+            case check_reads(length(Reads), Tag) of  %% TODO: COMPLETE
                 ok ->
-                    update(...),  %% TODO: COMPLETE
+                    update(Writes),  %% TODO: COMPLETE
                     Client ! {Ref, ok};
                 abort ->
-                    %% TODO: ADD SOME CODE
+                    Client ! {Ref, abort} %% TODO: ADD SOME CODE
             end,
             validator();
         stop ->
             ok;
+
+				% What is this?
         _Old ->
             validator()
     end.
     
 update(Writes) ->
     lists:foreach(fun({_, Entry, Value}) -> 
-                  %% TODO: ADD SOME CODE
+                  Entry ! {write, Value} %% TODO: ADD SOME CODE
                   end, 
                   Writes).
 
 send_read_checks(Reads, Tag) ->
     Self = self(),
     lists:foreach(fun({Entry, Time}) -> 
-                  %% TODO: ADD SOME CODE
+	                Entry ! {check, Tag, Time, Self} %% TODO: ADD SOME CODE
                   end, 
                   Reads).
 
