@@ -21,6 +21,10 @@ Then just type:
 
 	$ make
 
+**Warning:** Compilation time takes around 10 minutes.
+
+	make  866,01s user 29,94s system 147% cpu 10:09,45 total
+
 ## Work in progress
 
 The last 2 experiments were not finished yet. The experiment 3 is yet unstable 
