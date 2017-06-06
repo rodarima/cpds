@@ -9,9 +9,9 @@
 
 start(Clients, Entries, Reads, Writes, Time) ->
     register(s, server:start(Entries)),
-		Loc = 'server@127.0.0.1',
+		Server = {s, node()},
 		Conf = [Clients, Entries, Reads, Writes, Time],
-    L = startClients(Clients, [], Entries, Reads, Writes, Conf, Loc),
+    L = startClients(Clients, [], Entries, Reads, Writes, Conf, Server),
     %io:format("Starting: ~w CLIENTS, ~w ENTRIES, ~w RDxTR, ~w WRxTR, DURATION ~w s~n", 
     %     [Clients, Entries, Reads, Writes, Time]),
     timer:sleep(Time*1000),
@@ -25,10 +25,10 @@ stop(L) ->
     %io:format("Stopped~n")
 
 
-startClients(0, L, _, _, _, _) -> L;
-startClients(Clients, L, Entries, Reads, Writes, Conf, Loc) ->
-    Pid = client:start(Clients, Entries, Reads, Writes, Conf, {s, Loc}),
-    startClients(Clients-1, [Pid|L], Entries, Reads, Writes, Conf).
+startClients(0, L, _, _, _, _, _) -> L;
+startClients(Clients, L, Entries, Reads, Writes, Conf, Server) ->
+    Pid = client:start(Clients, Entries, Reads, Writes, Conf, Server),
+    startClients(Clients-1, [Pid|L], Entries, Reads, Writes, Conf, Server).
 
 stopClients([]) ->
     ok;

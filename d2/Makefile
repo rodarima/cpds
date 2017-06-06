@@ -1,4 +1,4 @@
-EXPERIMENTS=$(wildcard exp[0-9]*)
+EXPERIMENTS=exp1 exp2 exp3 exp4
 
 all:
 	for exp in $(EXPERIMENTS) ; do \

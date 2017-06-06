@@ -27,8 +27,7 @@ Then just type:
 
 ## Work in progress
 
-The last 2 experiments were not finished yet. The experiment 3 is yet unstable 
-to compile.
+The last 2 experiments are not finished yet. 
 
 ## Requeriments
 

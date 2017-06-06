@@ -1,18 +1,21 @@
 -module(client).
--export([start/6]).
+-export([start/6, open/8]).
+
+-define(client_node, 'alice@127.0.0.1').
 
 start(ClientID, Entries, Reads, Writes, Conf, Server) ->
-		Loc = lists:nth(8, Conf),
-    spawn(Loc, fun() -> open(ClientID, Entries, Reads, Writes, Conf, Server, 0, 0) end).
+    spawn(?client_node, client, open,
+			[ClientID, Entries, Reads, Writes, Conf, Server, 0, 0]).
 
 open(ClientID, Entries, Reads, Writes, Conf, Server, Total, Ok) ->
-    Server ! {open, self()},
+    io:format("Client runs on node ~s~n", [node()]),
+		Server ! {open, self()},
     receive
         {stop, From} ->
             %io:format("~w: Transactions TOTAL:~w, OK:~w, -> ~w % ~n",
             %[ClientID, Total, Ok, 100*Ok/Total]),
             io:format("~w, ~w, ~w, ~w, ~w, ~w, ~w~n",
-            Conf ++ [ClientID, Ok/Total]),
+            Conf ++ [ClientID, Ok/(Total+1)]),
             From ! {done, self()},
             ok;
         {transaction, Validator, Store} ->

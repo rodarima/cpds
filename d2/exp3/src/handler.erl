@@ -5,6 +5,7 @@ start(Client, Validator, Store) ->
     spawn_link(fun() -> init(Client, Validator, Store) end).
 
 init(Client, Validator, Store) ->
+    io:format("Handler runs on node ~s~n", [node()]),
     handler(Client, Validator, Store, [], []).
 
 handler(Client, Validator, Store, Reads, Writes) ->         
